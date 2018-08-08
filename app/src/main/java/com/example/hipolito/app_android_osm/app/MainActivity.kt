@@ -1,7 +1,8 @@
-package com.example.hipolito.app_android_osm
+package com.example.hipolito.app_android_osm.app
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import com.example.hipolito.app_android_osm.R
 
 class MainActivity : AppCompatActivity() {
 
