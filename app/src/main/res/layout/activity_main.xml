@@ -38,17 +38,18 @@
             android:textStyle="bold"
             android:gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
 
         <TextView
             android:id="@+id/txtCardapioDia"
-            android:text="Vatapá de frango; Bistaca bovina na chapa; Opção Vegetariana: Omelete de forno."
             android:textColor="@android:color/black"
             android:padding="8dp"
             android:textSize="20dp"
             android:gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="0dp"
+            android:layout_weight="2"/>
 
         <Button
             android:id="@+id/btnConfirmarRefeicao"
@@ -57,7 +58,8 @@
             android:text="CONFIRMAR REFEIÇÃO"
             android:background="@color/colorPrimaryDark"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
 
     </LinearLayout>
 
