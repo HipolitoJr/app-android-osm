@@ -9,6 +9,7 @@ import com.example.hipolito.app_android_osm.R
 import com.example.hipolito.app_android_osm.infra.api.APIService
 import com.example.hipolito.app_android_osm.model.MensagemResponse
 import com.example.hipolito.app_android_osm.model.Refeicao
+import com.example.hipolito.app_android_osm.model.Usuario
 import com.example.hipolito.app_android_osm.utils.RefeitorioConstants
 import com.example.hipolito.app_android_osm.utils.SecurityPreferences
 import kotlinx.android.synthetic.main.activity_main.*
@@ -22,6 +23,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var apiService: APIService
     private lateinit var securityPreferences: SecurityPreferences
+
+    private lateinit var usuarioLogado: Usuario
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,22 +87,39 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    @SuppressLint("ResourceAsColor")
     private fun exibirCardapio(refeicao: Refeicao) {
         securityPreferences.saveLong(RefeitorioConstants.KEY.REFEICAO_SELECIONADA, refeicao.id)
         txtCardapioDia.setText(refeicao.prato.descricao)
-
-        if (refeicao.interessados.contains(securityPreferences.getSavedLong(RefeitorioConstants.KEY.ID_USUARIO_LOGADO))) {
-            btnConfirmarRefeicao.isActivated = false
-            btnConfirmarRefeicao.setBackgroundColor(R.color.accent_material_dark)
-        }
-        Toast.makeText(this@MainActivity, "qtd" + refeicao.interessados + " id" + securityPreferences.getSavedLong(RefeitorioConstants.KEY.ID_USUARIO_LOGADO), Toast.LENGTH_SHORT).show()
+        getUsuarioLogado(refeicao)
     }
 
+    private fun getUsuarioLogado(refeicao: Refeicao){
+        val call = apiService.usuarioEndPoint.getUsuarioLogado()
+
+        call.enqueue(object: Callback<Usuario>{
+            override fun onFailure(call: Call<Usuario>?, t: Throwable?) {
+                Toast.makeText(this@MainActivity, "Falha na conexão", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onResponse(call: Call<Usuario>?, response: Response<Usuario>?) {
+                if (response!!.isSuccessful){
+                    usuarioLogado = response.body()!!
+                    verificaSituacaoInteresse(refeicao)
+                }else{
+                    Toast.makeText(this@MainActivity, "Erro code", Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
+    }
+
+    @SuppressLint("ResourceAsColor")
+    private fun verificaSituacaoInteresse(refeicao: Refeicao) {
+    }
+
+    @SuppressLint("ResourceAsColor")
     private fun capturarDiaSelecionado() {
         calendarCardapios.setOnDateChangeListener { calendarView, year, month, day ->
             var data = Date(year, month, day)
-
             buscarCardapio(converterData(data))
         }
     }
